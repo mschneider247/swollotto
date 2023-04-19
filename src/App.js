@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 
+import { Account } from './Components/Account';
+
 import { firebaseConfig } from './Configs/firebaseConfig';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -14,24 +16,11 @@ import { getFirestore } from "firebase/firestore";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { useCollectionData } from 'react-firebase-hooks/firestore';
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-
-
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const analytics = getAnalytics(app);
 const firestore = getFirestore();
-
-const Account = () => { 
-  return auth.currentUser && (
-    <>
-      <h4>Hey Michael!</h4>
-      <button onClick={() => auth.signOut()}>Sign Out</button>
-    </>
-  )
-};
 
 const SignIn = () => {
   const signInWithGoogle = () => {
@@ -61,6 +50,7 @@ const SignIn = () => {
     <button onClick={signInWithGoogle}>Sign in with Google</button>
   )
 };
+
 
 function App() {
 
