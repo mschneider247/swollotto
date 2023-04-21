@@ -1,26 +1,30 @@
-import logo from './logo.svg';
 import './App.css';
+//react-firebase-hooks
+import { useAuthState } from 'react-firebase-hooks/auth';
+import { useCollectionData } from 'react-firebase-hooks/firestore';
 
 import { Account } from './Components/Account';
 
 import { firebaseConfig } from './Configs/firebaseConfig';
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
-
-//react-firebase-hooks
-import { useAuthState } from 'react-firebase-hooks/auth';
-import { useCollectionData } from 'react-firebase-hooks/firestore';
+import { getFirestore, doc, getDoc } from "firebase/firestore";
+import { initializeApp, applicationDefault, cert } from "firebase/app";
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
 const analytics = getAnalytics(app);
-const firestore = getFirestore();
+const db = getFirestore();
+
+let level = getLevel();
+console.log(level);
+
+async function getLevel() {
+  await getDoc(doc(db, "achievements", "level")).then((doc) => {console.log(doc)});
+}
+
+
 
 const SignIn = () => {
   const signInWithGoogle = () => {
@@ -51,6 +55,16 @@ const SignIn = () => {
   )
 };
 
+const WalkAbout = () => {
+   return (
+        <section>
+            <h4>WalkAbout</h4>
+            <button>Add Step Count</button>
+
+        </section>
+    )
+}
+
 
 function App() {
 
@@ -59,21 +73,22 @@ function App() {
   return (
     <div className="App">
       <header className="header">
-        <ul>
+        <ul className="signIn">
           <li>
             {user ? <Account /> : <SignIn />}
           </li>
-          <l1>level 1</l1>
-          <li>🍔</li>
+          {user &&
+          <l1>
+            level
+          </l1>}
         </ul>
         <h3>SwolLotto</h3>
       </header>
+      <hr></hr>
+      {user && 
       <body>
-        <h5>achievements</h5>
-        <h5>nutritionWatch</h5>
-        <h5>hootchHound</h5>
-        <h5>bodyWorks</h5>
-      </body>
+        <WalkAbout />
+      </body>}
     </div>
   );
 }
