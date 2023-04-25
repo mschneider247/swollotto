@@ -8,14 +8,15 @@ import { Account } from './Components/Account';
 import { firebaseConfig } from './Configs/firebaseConfig';
 import { getAnalytics } from "firebase/analytics";
 import { getAuth, GoogleAuthProvider, signInWithPopup, onAuthStateChanged } from "firebase/auth";
-import { getFirestore, doc, getDoc } from "firebase/firestore";
-import { initializeApp, applicationDefault, cert } from "firebase/app";
+import { doc, getDoc } from "firebase/firestore";
+import { applicationDefault, cert } from "firebase/app";
 
 // Initialize Firebase
-const app = initializeApp(firebaseConfig);
+import { app, db } from './Configs/firebaseConfig';
+
 const auth = getAuth();
 const analytics = getAnalytics(app);
-const db = getFirestore();
+
 
 let level = getLevel();
 console.log(level);

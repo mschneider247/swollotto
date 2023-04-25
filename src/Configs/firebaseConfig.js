@@ -1,16 +1,21 @@
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "@firebase/firestore"
 
+const key = process.env.REACT_APP_FIREBASE_API_KEY;
+const id = process.env.REACT_APP_FIREBASE_APP_ID;
+const domain = process.env.REACT_APP_FIREBASE_AUTH_DOMAIN;
+const msid = process.env.REACT_APP_FIREBASE_MESSAGE_SENDER_ID;
+
 const env = {
-    apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-    authDomain: "swollotto.firebaseapp.com",
+    apiKey: key,
+    authDomain: domain,
     projectId: "swollotto",
     storageBucket: "swollotto.appspot.com",
-    messagingSenderId: "282391073397",
-    appId: "1:282391073397:web:24c356ad7ef672f79ade3c",
+    messagingSenderId: msid,
+    appId: id,
     measurementId: "G-QJ55BEMJDC"
 };
 
-const app = initializeApp(env);
+export const app = initializeApp(env);
 
 export const db = getFirestore();
