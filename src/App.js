@@ -12,7 +12,6 @@ import { doc, getDoc } from "firebase/firestore";
 
 // Initialize Firebase
 import { app, db } from './Configs/firebaseConfig';
-
 const auth = getAuth();
 const analytics = getAnalytics(app);
 
