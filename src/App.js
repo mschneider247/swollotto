@@ -1,31 +1,36 @@
 import './App.css';
+import { useState, useEffect } from "react";
 //react-firebase-hooks
 import { useAuthState } from 'react-firebase-hooks/auth';
 
 import { Account } from './Components/Account';
 import { SignIn } from './Components/SignIn';
+import { Achievements } from './Components/Achievements';
 import { WalkAbout } from './Components/WalkAbout';
 
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { doc, getDoc } from "firebase/firestore";
+import { collection, getDocs } from "firebase/firestore";
 
 // Initialize Firebase
 import { app, db } from './Configs/firebaseConfig';
 const auth = getAuth();
 const analytics = getAnalytics(app);
 
-
-let level = getLevel();
-console.log(level);
-
-async function getLevel() {
-  await getDoc(doc(db, "achievements", "level")).then((doc) => {console.log(doc)});
-}
-
 function App() {
 
   const [user] = useAuthState(auth);
+  const [users, setUsers] = useState([]);
+  const usersRef = collection(db, "users");
+
+  useEffect(() => {
+    const getUsers = async () => {
+      const data = await await getDocs(usersRef);
+      setUsers(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+    };
+
+    getUsers();
+  }, [usersRef]);
 
   return (
     <div className="App">
@@ -43,9 +48,24 @@ function App() {
       </header>
       <hr></hr>
       {user && 
-      <body>
+      <section>
+        <div>
+          {users.map((user) => {
+            return (
+              <div key={user.id}>
+                <h4>
+                  {user.name}
+                </h4>
+                <h4>
+                  {user.level}
+                </h4>
+              </div>
+            )
+          })}
+        </div>
+        <Achievements />
         <WalkAbout />
-      </body>}
+      </section>}
     </div>
   );
 }
