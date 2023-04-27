@@ -44,18 +44,17 @@ function App() {
 
   const checkForUserInDB = async () => {
     const foundUser = users.find((user) => user.id === authorizedUser.uid);
-    if (!foundUser && user) {
+    if (!foundUser && user && !loggedIn) {
       await setLoggedIn(true);
       await addDoc(usersRef, {...user})
-      
     }
-    if (foundUser && !user) {
+    if (foundUser && !user && !loggedIn) {
       await setLoggedIn(true);
       await setUser(foundUser)
     }
   }
 
-  if (authorizedUser && !loggedIn) {
+  if ((authorizedUser || user) && !loggedIn) {
     checkForUserInDB();
   }
 
