@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 //Firebase and react-firebase-hooks
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, addDoc } from "firebase/firestore";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { app, db } from './Configs/firebaseConfig';
 
@@ -16,7 +16,6 @@ import { Achievements } from './Components/Achievements';
 import { WalkAbout } from './Components/WalkAbout';
 
 //Utils
-import { buildNewUser } from './Utils/utils.js';
 
 // Initialize Firebase
 const auth = getAuth();
@@ -30,74 +29,50 @@ function App() {
   const [authorizedUser] = useAuthState(auth);
   const [user, setUser] = useState();
   const [users, setUsers] = useState([]);
+  const [loggedIn, setLoggedIn] = useState(false);
   const usersRef = collection(db, "users");
 
   useEffect(() => {
     const getUsers = async () => {
       const data = await await getDocs(usersRef);
-      setUsers(data.docs.map((doc) => ({...doc.data(), id: doc.id})));
+      setUsers(data.docs.map((doc) => ({...doc.data()})));
     };
-
-  getUsers();
-  // Why does this freak out when given usersRef as a dependency?
+    getUsers();
+    checkForUserInDB();
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const checkForLogin = () => {
-    console.log('authorizedUser:: ',authorizedUser);
-  
-    if (authorizedUser) {
-      const foundUser = users.find((user) => user.id === authorizedUser.uid);
-      if (!foundUser) {
-        const newUser = buildNewUser(authorizedUser);
-        console.log('newUser:: ',newUser);
-        // setUser(newUser);
-      } else {
-        console.log('foundUser:: ',foundUser);
-        // setUser(foundUser);
-      }
+  const checkForUserInDB = async () => {
+    const foundUser = users.find((user) => user.id === authorizedUser.uid);
+    if (!foundUser && user) {
+      await setLoggedIn(true);
+      await addDoc(usersRef, {...user})
+      
+    }
+    if (foundUser && !user) {
+      await setLoggedIn(true);
+      await setUser(foundUser)
     }
   }
 
-  checkForLogin();
+  if (authorizedUser && !loggedIn) {
+    checkForUserInDB();
+  }
+
   return (
     <div className="App">
       <header className="header">
-        <ul className="signIn">
-          <li>
-            {authorizedUser ? <Account name={'mike'}
-                             level={'1'}
-            /> 
-            : <SignIn />}
-          </li>
-          {user &&
-          <l1>
-            level
-          </l1>}
-        </ul>
-        <h3>SwolLotto</h3>
+      <h3>SwolLotto</h3>
+        {authorizedUser ? <Account setUser={setUser} setLoggedIn={setLoggedIn} /> 
+        : <SignIn />}
       </header>
       <hr></hr>
-      {(!user && authorizedUser) &&
-        <FirstTimeLogin props={authorizedUser}/>
+      {(authorizedUser && !user && !loggedIn) &&
+        <FirstTimeLogin auth={authorizedUser} setUser={setUser}/>
       }
-      {user && 
+      {(authorizedUser && user && loggedIn) && 
       <section>
-        <div>
-          {users.map((user) => {
-            return (
-              <div key={user.id}>
-                <h4>
-                  {user.name}
-                </h4>
-                <h4>
-                  {user.level}
-                </h4>
-              </div>
-            )
-          })}
-        </div>
-        <Achievements />
+        <Achievements user={user}/>
         <WalkAbout />
       </section>}
     </div>
