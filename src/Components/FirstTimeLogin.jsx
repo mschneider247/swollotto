@@ -15,8 +15,10 @@ export function FirstTimeLogin (props) {
     const [termsAccepted, setTermsAccepted] = useState(false);
 
     const acceptTermsAndSetName = () => {
-        const newUser = buildNewUser(props.auth, name)
-        props.setUser(newUser)
+        props.setLoggedIn(true);
+        const newUser = buildNewUser(props.auth, name);
+        props.setUser(newUser);
+        props.addUserToDB(newUser);
     };
 
     return (

@@ -22,8 +22,6 @@ const auth = getAuth();
 const analytics = getAnalytics(app);
 
 
-
-
 function App() {
 
   const [authorizedUser] = useAuthState(auth);
@@ -34,42 +32,52 @@ function App() {
 
   useEffect(() => {
     const getUsers = async () => {
-      const data = await await getDocs(usersRef);
-      setUsers(data.docs.map((doc) => ({...doc.data()})));
+      const data = await getDocs(usersRef);
+      await setUsers(data.docs.map((doc) => ({...doc.data()})));
     };
-    getUsers();
-    checkForUserInDB();
+    try {
+      getUsers();
+      findUser();
+    } catch(error) {
+      console.log(error);
+    }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const checkForUserInDB = async () => {
-    const foundUser = users.find((user) => user.id === authorizedUser.uid);
-    if (!foundUser && user && !loggedIn) {
-      await setLoggedIn(true);
-      await addDoc(usersRef, {...user})
-    }
-    if (foundUser && !user && !loggedIn) {
-      await setLoggedIn(true);
-      await setUser(foundUser)
+  const findUser = () => {
+    const foundUser = users.find((user) => user.id === authorizedUser.uid)
+    if (foundUser) {
+      setUser(foundUser);
+      setLoggedIn(true);
     }
   }
 
-  if ((authorizedUser || user) && !loggedIn) {
-    checkForUserInDB();
+  const addUserToDB = async (user) => {
+    await addDoc(usersRef, {...user});
+  }
+
+  const logOut = async () => {
+    await setLoggedIn(false);
+    await setUser()
+    await auth.signOut();
+  }
+
+  if (authorizedUser && !user) {
+    findUser();
   }
 
   return (
     <div className="App">
       <header className="header">
       <h3>SwolLotto</h3>
-        {authorizedUser ? <Account setUser={setUser} setLoggedIn={setLoggedIn} /> 
-        : <SignIn />}
+        {authorizedUser ? <Account logOut={logOut} /> 
+        : <SignIn findUser={findUser}/>}
       </header>
       <hr></hr>
       {(authorizedUser && !user && !loggedIn) &&
-        <FirstTimeLogin auth={authorizedUser} setUser={setUser}/>
+        <FirstTimeLogin auth={authorizedUser} setUser={setUser} addUserToDB={addUserToDB} setLoggedIn={setLoggedIn}/>
       }
-      {(authorizedUser && user && loggedIn) && 
+      {(authorizedUser && user) &&
       <section>
         <Achievements user={user}/>
         <WalkAbout />
