@@ -69,19 +69,24 @@ function App() {
   return (
     <div className="App">
       <header className="header">
-      <h3>SwolLotto</h3>
-        {authorizedUser ? <Account logOut={logOut} /> 
-        : <SignIn findUser={findUser}/>}
+        <h3>SwolLotto</h3>
+        {authorizedUser ? 
+          <Account logOut={logOut} /> 
+        : <SignIn findUser={findUser}/>
+        }
       </header>
       <hr></hr>
       {(authorizedUser && !user && !loggedIn) &&
-        <FirstTimeLogin auth={authorizedUser} setUser={setUser} addUserToDB={addUserToDB} setLoggedIn={setLoggedIn}/>
+        <section>
+          <FirstTimeLogin auth={authorizedUser} setUser={setUser} addUserToDB={addUserToDB} setLoggedIn={setLoggedIn}/>
+        </section>
       }
       {(authorizedUser && user) &&
-      <section>
-        <Achievements user={user}/>
-        <WalkAbout />
-      </section>}
+        <section>
+          <Achievements user={user}/>
+          <WalkAbout />
+        </section>
+      }
     </div>
   );
 }
