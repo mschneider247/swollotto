@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { buildNewUser } from '../Utils/utils';
+import { buildNewUser } from '../Utils/buildNewUser';
 
 const terms = ['Swollotto cares about data ethics. Only the bare minimum amount will be kept and only at your express consent.',
               ' For example, if you\'d like updates or notifications sent. We conduct no marketing, no spamming. You can leave at any time, no guilt trips.',

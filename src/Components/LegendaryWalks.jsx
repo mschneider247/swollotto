@@ -1,14 +1,13 @@
-// React component for WalkAbout tab
-// Needs a button to add steps for today
-// Needs a button to add steps for yesterday
+// React component for LegendaryWalks tab
+// Needs a button to add steps
 // Graph to show step count over time
 // Daily step goal
 // Needs to connect to firebase to get and store data
 
-export const WalkAbout = () => {
+export const LegendaryWalks = () => {
     return (
         <section>
-            <h4>WalkAbout</h4>
+            <h4>LegendaryWalks</h4>
             <button
                 onClick={() => {console.log("Step step step")}}
             >Add Step Count</button>

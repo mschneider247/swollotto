@@ -13,7 +13,7 @@ import { Account } from './Components/Account';
 import { SignIn } from './Components/SignIn';
 import { FirstTimeLogin } from './Components/FirstTimeLogin';
 import { Achievements } from './Components/Achievements';
-import { WalkAbout } from './Components/WalkAbout';
+import { LegendaryWalks } from './Components/LegendaryWalks';
 
 //Utils
 
@@ -84,7 +84,8 @@ function App() {
       {(authorizedUser && user) &&
         <section>
           <Achievements user={user}/>
-          <WalkAbout />
+          {/* <QuestPicker /> */}
+          <LegendaryWalks />
         </section>
       }
     </div>
