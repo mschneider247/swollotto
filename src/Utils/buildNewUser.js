@@ -9,24 +9,18 @@ export const buildNewUser = (authorizedUser, name) => {
         agreedToText: false,
     }
 
-    let traits = {
-        stamina: 1,
-        discipline: 1,
-        strength: 1,
-        coordination: 1,
-        calm: 1,
-        focus: 1,
-        speed: 1,
-        knowledge: 1,
-        safety: 1,
-        stress: 0,
+    let attributes = {
+        vitamins: 0,
+        dentalHygiene: 0,
+        water: 0,
+        fiber: 0,
     }
 
     let stats = {
         name: name,
         level: 1,
         exP: 0,
-        traits: traits,
+        attributes: attributes,
         inventory: [],
         achievements: [],
         quests: [],

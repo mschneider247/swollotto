@@ -12,6 +12,7 @@ import { app, db } from './Configs/firebaseConfig';
 import { Account } from './Components/Account';
 import { SignIn } from './Components/SignIn';
 import { FirstTimeLogin } from './Components/FirstTimeLogin';
+import { Dashboard } from './Components/Dashboard';
 import { Achievements } from './Components/Achievements';
 import { LegendaryWalks } from './Components/LegendaryWalks';
 
@@ -31,6 +32,7 @@ function App() {
   const usersRef = collection(db, "users");
 
   useEffect(() => {
+    console.log('xx hello world?');
     const getUsers = async () => {
       const data = await getDocs(usersRef);
       await setUsers(data.docs.map((doc) => ({...doc.data()})));
@@ -66,6 +68,7 @@ function App() {
     findUser();
   }
 
+
   return (
     <div className="App">
       <header className="header">
@@ -84,8 +87,9 @@ function App() {
       {(authorizedUser && user) &&
         <section>
           <Achievements user={user}/>
+          <Dashboard />
           {/* <QuestPicker /> */}
-          <LegendaryWalks />
+          {/* <LegendaryWalks /> */}
         </section>
       }
     </div>

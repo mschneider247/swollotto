@@ -9,7 +9,7 @@ const terms = ['Swollotto cares about data ethics. Only the bare minimum amount 
               ' In return you agree to consult with a physician before using this application. You agree to never hold this app or its creator liable for',
               ' any damages, real or imagined, that may occur as a result of using this app. Be safe, be smart and have fun!'];
 
-export function FirstTimeLogin (props) {
+export const FirstTimeLogin = (props) => {
 
     const [name, setName] = useState('');
     const [termsAccepted, setTermsAccepted] = useState(false);
