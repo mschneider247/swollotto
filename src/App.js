@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 //Firebase and react-firebase-hooks
 import { getAnalytics } from "firebase/analytics";
 import { getAuth } from "firebase/auth";
-import { collection, getDocs, addDoc } from "firebase/firestore";
+import { collection, getDocs, getDoc, addDoc } from "firebase/firestore";
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { app, db } from './Configs/firebaseConfig';
 
@@ -30,12 +30,20 @@ function App() {
   const [users, setUsers] = useState([]);
   const [loggedIn, setLoggedIn] = useState(false);
   const usersRef = collection(db, "users");
+  const userRef = collection(db, "users").doc(authorizedUser?.uid);
 
   useEffect(() => {
     console.log('xx hello world?');
     const getUsers = async () => {
       const data = await getDocs(usersRef);
       await setUsers(data.docs.map((doc) => ({...doc.data()})));
+    };
+    const getUser = async () => {
+      const userDoc = await getDoc(userRef);
+      if (userDoc.exists()) {
+        setUser(userDoc.data());
+        setLoggedIn(true);
+      }
     };
     try {
       getUsers();
